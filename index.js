@@ -11,12 +11,13 @@ exports.sync = function (store, router) {
       return state.route
     },
     function (route) {
-      if (route.path === currentPath) {
-        return
-      }
       isTimeTraveling = true
       currentPath = route.path
-      router.go(route.path)
+      router.go({
+        path: route.path,
+        query: route.query,
+        params: route.params
+      })
     },
     { deep: true, sync: true }
   )
