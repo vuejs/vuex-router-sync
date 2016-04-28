@@ -1,6 +1,6 @@
 exports.sync = function (store, router) {
-  patchStore(store)
   store.router = router
+  patchStore(store)
 
   var isTimeTraveling = false
   var currentPath
@@ -39,12 +39,13 @@ exports.sync = function (store, router) {
 
 function patchStore (store) {
   // add state
-  var set = store._vm.constructor.parsers.path.setPath
+  var set = store._vm.constructor.parsers.path.setPath,
+      initialRoute = store.router._currentRoute
   store._dispatching = true
   set(store._vm._data, 'route', {
-    path: '',
-    query: null,
-    params: null
+    path: initialRoute.path,
+    query: initialRoute.query,
+    params: initialRoute.params
   })
   store._dispatching = false
   // add mutations
