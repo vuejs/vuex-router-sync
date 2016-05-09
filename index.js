@@ -32,6 +32,7 @@ exports.sync = function (store, router) {
     store.dispatch('router/ROUTE_CHANGED', {
       path: to.path,
       query: to.query,
+      name: to.name,
       params: to.params
     })
   })
@@ -43,6 +44,7 @@ function patchStore (store) {
   store._dispatching = true
   set(store._vm._data, 'route', {
     path: '',
+    name: '',
     query: null,
     params: null
   })
@@ -54,6 +56,7 @@ function patchStore (store) {
         mutations: {
           'router/ROUTE_CHANGED': function (state, to) {
             state.path = to.path
+            state.name = to.name
             state.query = to.query
             state.params = to.params
           }
