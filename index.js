@@ -3,7 +3,7 @@ exports.sync = function (store, router) {
   store.router = router
 
   var isTimeTraveling = false
-  var currentPath
+  var currentPath, currentQUery, currentParams
 
   // sync router on store change
   store.watch(
@@ -11,12 +11,15 @@ exports.sync = function (store, router) {
       return state.route
     },
     function (route) {
-      if (route.path === currentPath) {
+      if (route.path === currentPath && route.params === currentParams &&
+          route.query === currentQuery) {
         return
       }
       isTimeTraveling = true
       currentPath = route.path
-      router.go(route.path)
+      currentQuery = route.query
+      currentParams = route.params
+      router.go(route)
     },
     { deep: true, sync: true }
   )
@@ -29,6 +32,8 @@ exports.sync = function (store, router) {
     }
     var to = transition.to
     currentPath = to.path
+    currentQuery = to.query
+    currentParams = to.params
     store.dispatch('router/ROUTE_CHANGED', {
       path: to.path,
       query: to.query,
