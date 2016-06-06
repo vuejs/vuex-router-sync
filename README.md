@@ -32,3 +32,7 @@ sync(store, router) // done.
 - When the router navigates to a new route, the store's state is updated.
 
 - When the store's `route` state is updated, it notifies the router to navigate to the corresponding path. This enables time-traveling between routes in `vue-devtools`.
+
+### License
+
+[MIT](http://opensource.org/licenses/MIT)
