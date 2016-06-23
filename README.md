@@ -14,7 +14,12 @@ import { sync } from 'vuex-router-sync'
 import store from './vuex/store' // vuex store instance
 import router from './router' // vue-router instance
 
-sync(store, router) // done.
+sync(store, router, {
+  path: '',
+  query: null,
+  params: null,
+  title: '' // other special params you want to track
+}) // done.
 
 // bootstrap your app...
 ```

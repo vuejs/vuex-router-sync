@@ -1,5 +1,9 @@
-exports.sync = function (store, router) {
-  patchStore(store)
+exports.sync = function (store, router, stateForSync = {
+  path: '',
+  query: null,
+  params: null
+}) {
+  patchStore(store, stateForSync)
   store.router = router
 
   var isTimeTraveling = false
@@ -29,23 +33,19 @@ exports.sync = function (store, router) {
     }
     var to = transition.to
     currentPath = to.path
-    store.dispatch('router/ROUTE_CHANGED', {
-      path: to.path,
-      query: to.query,
-      params: to.params
+    var newState = {}
+    Object.keys(stateForSync).forEach(key => {
+      newState[key] = to[key] || ''
     })
+    store.dispatch('router/ROUTE_CHANGED', newState)
   })
 }
 
-function patchStore (store) {
+function patchStore (store, stateForSync) {
   // add state
   var set = store._vm.constructor.parsers.path.setPath
   store._dispatching = true
-  set(store._vm._data, 'route', {
-    path: '',
-    query: null,
-    params: null
-  })
+  set(store._vm._data, 'route', stateForSync)
   store._dispatching = false
   // add mutations
   store.hotUpdate({
@@ -53,9 +53,9 @@ function patchStore (store) {
       route: {
         mutations: {
           'router/ROUTE_CHANGED': function (state, to) {
-            state.path = to.path
-            state.query = to.query
-            state.params = to.params
+            Object.keys(stateForSync).forEach(key => {
+              state[key] = to[key] || ''
+            })
           }
         }
       }
