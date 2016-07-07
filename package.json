@@ -1,6 +1,6 @@
 {
   "name": "vuex-router-sync",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Effortlessly keep vue-router and vuex store in sync.",
   "main": "index.js",
   "repository": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/vuejs/vuex-router-sync#readme",
   "peerDependencies": {
-    "vuex": ">=0.6.2",
+    "vuex": ">= 0.6.2 < 3",
     "vue-router": ">=0.7.11"
   }
 }

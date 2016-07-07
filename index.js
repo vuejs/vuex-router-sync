@@ -2,6 +2,7 @@ exports.sync = function (store, router) {
   patchStore(store)
   store.router = router
 
+  var commit = store.commit || store.dispatch
   var isTimeTraveling = false
   var currentPath
 
@@ -29,20 +30,28 @@ exports.sync = function (store, router) {
     }
     var to = transition.to
     currentPath = to.path
-    store.dispatch('router/ROUTE_CHANGED', to)
+    commit('router/ROUTE_CHANGED', to)
   })
+}
+
+function applyMutationState(store, state) {
+  // support above 2.0
+  if (store.hasOwnProperty('_committing')) {
+    return store._committing = state
+  }
+  return store._dispatching = state
 }
 
 function patchStore (store) {
   // add state
   var set = store._vm.constructor.set
-  store._dispatching = true
+  applyMutationState(store, true);
   set(store.state, 'route', {
     path: '',
     query: null,
     params: null
   })
-  store._dispatching = false
+  applyMutationState(store, false);
   // add mutations
   store.hotUpdate({
     modules: {
