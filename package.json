@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/vuejs/vuex-router-sync#readme",
   "peerDependencies": {
-    "vuex": ">= 0.6.2 < 3",
+    "vuex": ">= 0.6.2 < 3 || ^1.0.0-rc ||^2.0.0-rc",
     "vue-router": ">=0.7.11"
   }
 }
