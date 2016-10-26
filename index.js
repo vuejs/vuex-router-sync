@@ -28,7 +28,7 @@ exports.sync = function (store, router) {
       isTimeTraveling = false
       return
     }
-    var to = transition.to
+    var to = transition.to || transition
     currentPath = to.path
     commit('router/ROUTE_CHANGED', to)
   })
