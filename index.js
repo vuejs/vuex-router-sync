@@ -9,7 +9,8 @@ exports.sync = function (store, router) {
           hash: to.hash,
           query: to.query,
           params: to.params,
-          fullPath: to.fullPath
+          fullPath: to.fullPath,
+          title: to.title
         })
       }
     }
