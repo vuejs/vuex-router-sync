@@ -1,9 +1,11 @@
-exports.sync = function (store, router) {
-  store.registerModule('route', {
+exports.sync = function (store, router, options) {
+  var moduleName = (options || {}).moduleName || 'route'
+
+  store.registerModule(moduleName, {
     state: {},
     mutations: {
       'router/ROUTE_CHANGED': function (state, to) {
-        store.state.route = Object.freeze({
+        store.state[moduleName] = Object.freeze({
           name: to.name,
           path: to.path,
           hash: to.hash,
@@ -20,7 +22,7 @@ exports.sync = function (store, router) {
 
   // sync router on store change
   store.watch(
-    function (state) { return state.route },
+    function (state) { return state[moduleName] },
     function (route) {
       if (route.fullPath === currentPath) {
         return
