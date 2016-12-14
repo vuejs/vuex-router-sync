@@ -4,14 +4,16 @@ exports.sync = function (store, router, options) {
   store.registerModule(moduleName, {
     state: {},
     mutations: {
-      'router/ROUTE_CHANGED': function (state, to) {
+      'router/ROUTE_CHANGED': function (state, transition) {
         store.state[moduleName] = Object.freeze({
-          name: to.name,
-          path: to.path,
-          hash: to.hash,
-          query: to.query,
-          params: to.params,
-          fullPath: to.fullPath
+          name: transition.to.name,
+          path: transition.to.path,
+          hash: transition.to.hash,
+          query: transition.to.query,
+          params: transition.to.params,
+          fullPath: transition.to.fullPath,
+          meta: transition.to.meta,
+          from: transition.from
         })
       }
     }
@@ -35,12 +37,12 @@ exports.sync = function (store, router, options) {
   )
 
   // sync store on router navigation
-  router.afterEach(function (to) {
+  router.afterEach(function (to, from) {
     if (isTimeTraveling) {
       isTimeTraveling = false
       return
     }
     currentPath = to.fullPath
-    store.commit('router/ROUTE_CHANGED', to)
+    store.commit('router/ROUTE_CHANGED', { to: to, from: from })
   })
 }
