@@ -19,6 +19,13 @@ sync(store, router) // done.
 // bootstrap your app...
 ```
 
+You can set a custom vuex module name
+
+```js
+sync(store, router, { moduleName: 'RouteModule' } )
+```
+
+
 ### How does it work?
 
 - It adds a `route` module into the store, which contains the state representing the current route:
