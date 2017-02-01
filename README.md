@@ -9,7 +9,7 @@
 npm install vuex-router-sync
 
 # for usage with vue-router < 2.0:
-npm install vuex-router-sync@2
+npm install vuex-router-sync@3
 ```
 
 ``` js
