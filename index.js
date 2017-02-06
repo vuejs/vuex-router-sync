@@ -34,7 +34,7 @@ exports.sync = function (store, router, options) {
       return
     }
     currentPath = to.fullPath
-    store.commit('router/ROUTE_CHANGED', { to: to, from: from })
+    store.commit('router/ROUTE_CHANGED', { to, from })
   })
 }
 
