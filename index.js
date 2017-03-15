@@ -21,8 +21,12 @@ exports.sync = function (store, router, options) {
         return
       }
       isTimeTraveling = true
+      if (!currentPath) {
+        router.replace(route)
+      } else {
+        router.push(route)
+      }
       currentPath = route.fullPath
-      router.push(route)
     },
     { sync: true }
   )
