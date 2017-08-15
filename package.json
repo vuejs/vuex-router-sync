@@ -32,7 +32,7 @@
     "vuex": "^2.1.0"
   },
   "peerDependencies": {
-    "vue-router": "^2.0.0",
+    "vue-router": "^2.5.0",
     "vuex": "^2.1.0"
   }
 }

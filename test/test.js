@@ -32,7 +32,7 @@ const run = (originalModuleName, done) => {
     ]
   })
 
-  sync(store, router, {
+  const unsync = sync(store, router, {
     moduleName: originalModuleName
   })
 
@@ -56,7 +56,7 @@ const run = (originalModuleName, done) => {
 
   Vue.nextTick(() => {
     expect(app.$el.textContent).toBe('/c/d?n=1#hello c d')
-    done()
+    done(unsync)
   })
 }
 
@@ -66,4 +66,37 @@ test('default usage', done => {
 
 test('with custom moduleName', done => {
   run('moduleName', done)
+})
+
+test('desync', done => {
+  const store = new Vuex.Store()
+  spyOn(store, "watch").and.callThrough()
+  
+  const router = new VueRouter()
+
+  const moduleName = 'testDesync'  
+  const unsync = sync(store, router, {
+    moduleName: moduleName
+  })
+
+  expect(unsync).toBeInstanceOf(Function)
+
+  // Test module registered, store watched, router hooked
+  expect(store.state[moduleName]).toBeDefined()
+  expect(store.watch).toHaveBeenCalled()
+  expect(store._watcherVM).toBeDefined()
+  expect(store._watcherVM._watchers).toBeDefined()
+  expect(store._watcherVM._watchers.length).toBe(1)
+  expect(router.afterHooks).toBeDefined()
+  expect(router.afterHooks.length).toBe(1)
+
+  // Now unsync vuex-router-sync
+  unsync()
+
+  // Ensure router unhooked, store-unwatched, module unregistered
+  expect(router.afterHooks.length).toBe(0)
+  expect(store._watcherVm).toBeUndefined()
+  expect(store.state[moduleName]).toBeUndefined()
+  
+  done()
 })

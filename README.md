@@ -17,9 +17,13 @@ import { sync } from 'vuex-router-sync'
 import store from './vuex/store' // vuex store instance
 import router from './router' // vue-router instance
 
-sync(store, router) // done.
+const unsync = sync(store, router) // done. Returns an unsync callback fn
 
 // bootstrap your app...
+
+// During app/Vue teardown (e.g., you only use Vue.js in a portion of your app and you 
+// navigate away from that portion and want to release/destroy Vue components/resources)
+unsync() // Unsyncs store from router
 ```
 
 You can optionally set a custom vuex module name:
@@ -27,7 +31,6 @@ You can optionally set a custom vuex module name:
 ```js
 sync(store, router, { moduleName: 'RouteModule' } )
 ```
-
 
 ### How does it work?
 
