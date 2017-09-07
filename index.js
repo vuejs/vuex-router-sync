@@ -38,7 +38,7 @@ exports.sync = function (store, router, options) {
       return
     }
     currentPath = to.fullPath
-    store.commit(moduleName + '/ROUTE_CHANGED', { to: to, from: from })
+    store.commit(moduleName + '/ROUTE_CHANGED', { to, from })
   })
 
   return function unsync() {
