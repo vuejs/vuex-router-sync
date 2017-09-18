@@ -18,15 +18,13 @@ exports.sync = function (store, router, options) {
   var storeUnwatch = store.watch(
     function (state) { return state[moduleName] },
     function (route) {
-      if (route.fullPath === currentPath) {
-        return
+      var fullPath = route.fullPath
+      if (fullPath === currentPath) { return }
+      if (currentPath != null) {
+        isTimeTraveling = true
+        router.push(route)
       }
-      isTimeTraveling = true
-      var methodToUse = currentPath == null
-        ? 'replace'
-        : 'push'
-      currentPath = route.fullPath
-      router[methodToUse](route)
+      currentPath = fullPath
     },
     { sync: true }
   )
