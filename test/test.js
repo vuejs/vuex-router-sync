@@ -87,14 +87,14 @@ test('unsync', done => {
   expect(store._watcherVM).toBeDefined()
   expect(store._watcherVM._watchers).toBeDefined()
   expect(store._watcherVM._watchers.length).toBe(1)
-  expect(router.afterHooks).toBeDefined()
-  expect(router.afterHooks.length).toBe(1)
+  expect(router.beforeHooks).toBeDefined()
+  expect(router.beforeHooks.length).toBe(1)
 
   // Now unsync vuex-router-sync
   unsync()
 
   // Ensure router unhooked, store-unwatched, module unregistered
-  expect(router.afterHooks.length).toBe(0)
+  expect(router.beforeHooks.length).toBe(0)
   expect(store._watcherVm).toBeUndefined()
   expect(store.state[moduleName]).toBeUndefined()
 

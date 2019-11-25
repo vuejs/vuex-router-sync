@@ -32,19 +32,20 @@ exports.sync = function (store, router, options) {
   )
 
   // sync store on router navigation
-  const afterEachUnHook = router.afterEach((to, from) => {
+  const beforeEachUnhook = router.beforeEach((to, from, next) => {
     if (isTimeTraveling) {
       isTimeTraveling = false
       return
     }
     currentPath = to.fullPath
     store.commit(moduleName + '/ROUTE_CHANGED', { to, from })
+    next()
   })
 
   return function unsync () {
     // On unsync, remove router hook
-    if (afterEachUnHook != null) {
-      afterEachUnHook()
+    if (beforeEachUnhook != null) {
+      beforeEachUnhook()
     }
 
     // On unsync, remove store watch
