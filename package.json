@@ -3,11 +3,11 @@
   "version": "5.0.0",
   "description": "Effortlessly keep vue-router and vuex store in sync.",
   "main": "index.js",
+  "typings": "types/index.d.ts",
   "files": [
     "index.js",
     "types/*.d.ts"
   ],
-  "typings": "types/index.d.ts",
   "scripts": {
     "test": "jest && npm run test:types",
     "test:types": "tsc -p types/test",
@@ -30,15 +30,15 @@
     "url": "https://github.com/vuejs/vuex-router-sync/issues"
   },
   "homepage": "https://github.com/vuejs/vuex-router-sync#readme",
+  "peerDependencies": {
+    "vue-router": "^3.0.0",
+    "vuex": "^3.0.0"
+  },
   "devDependencies": {
     "buble": "^0.16.0",
     "jest": "^21.2.1",
     "typescript": "^2.5.3",
     "vue": "^2.5.0",
-    "vue-router": "^3.0.0",
-    "vuex": "^3.0.0"
-  },
-  "peerDependencies": {
     "vue-router": "^3.0.0",
     "vuex": "^3.0.0"
   }
