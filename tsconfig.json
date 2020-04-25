@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "dist",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+
+    "paths": {
+      "@/*": ["src/*"],
+      "test/*": ["test/*"]
+    },
+
+    "types": [
+      "node",
+      "jest"
+    ]
+  },
+
+  "include": [
+    "src",
+    "test"
+  ]
+}
