@@ -11,8 +11,6 @@ npm install vuex-router-sync
 npm install vuex-router-sync@2
 ```
 
-
-
 ```javascript
 import { sync } from 'vuex-router-sync'
 import store from './vuex/store' // vuex store 实例
@@ -31,8 +29,6 @@ unsync() // 取消 store 和 router 中间的同步
 ```javascript
 sync(store, router, { moduleName: 'RouteModule' } )
 ```
-
-
 
 ### 工作原理
 
