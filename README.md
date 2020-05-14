@@ -1,5 +1,8 @@
 # vuex-router-sync [![CircleCI](https://circleci.com/gh/vuejs/vuex-router-sync.svg?style=svg)](https://circleci.com/gh/vuejs/vuex-router-sync)
 
+
+[中文版本 (Chinese Version)](/vuejs/vuex-router-sync/blob/master/README.zh-cn.md)
+
 > Sync vue-router's current $route as part of vuex store's state.
 
 ## Usage
