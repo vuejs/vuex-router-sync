@@ -1,5 +1,4 @@
-# vuex-router-sync [![CircleCI](https://circleci.com/gh/vuejs/vuex-router-sync.svg?style=svg)](https://circleci.com/gh/vuejs/vuex-router-sync)
-
+# vuex-router-sync [![Build Status](https://circleci.com/gh/vuejs/vuex-router-sync.svg?style=shield)](https://circleci.com/gh/vuejs/vuex-router-sync)
 
 [中文版本 (Chinese Version)](README.zh-cn.md)
 
