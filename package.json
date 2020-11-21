@@ -36,8 +36,8 @@
   },
   "homepage": "https://github.com/vuejs/vuex-router-sync#readme",
   "peerDependencies": {
-    "vue-router": "^3.0.0",
-    "vuex": "^3.0.0"
+    "vue-router": "^4.0.0-rc.5",
+    "vuex": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.1.0",
@@ -60,7 +60,7 @@
     "tslib": "^1.11.1",
     "typescript": "^3.8.3",
     "vue": "^2.5.0",
-    "vue-router": "^3.0.0",
-    "vuex": "^3.0.0"
+    "vue-router": "^4.0.0-rc.5",
+    "vuex": "^4.0.0-rc.1"
   }
 }

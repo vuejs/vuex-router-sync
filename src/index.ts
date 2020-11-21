@@ -1,29 +1,29 @@
 import { Store } from 'vuex'
-import VueRouter, { Route } from 'vue-router'
+import { Router, RouteLocationNormalized } from 'vue-router'
 
 export interface SyncOptions {
   moduleName: string
 }
 
 export interface State {
-  name?: string | null
-  path: string
-  hash: string
-  query: Record<string, string | (string | null)[]>
-  params: Record<string, string>
-  fullPath: string
-  meta?: any
+  name?: RouteLocationNormalized['name']
+  path: RouteLocationNormalized['path']
+  hash: RouteLocationNormalized['hash']
+  query: RouteLocationNormalized['query']
+  params: RouteLocationNormalized['params']
+  fullPath: RouteLocationNormalized['fullPath']
+  meta?: RouteLocationNormalized['meta']
   from?: Omit<State, 'from'>
 }
 
 export interface Transition {
-  to: Route
-  from: Route
+  to: RouteLocationNormalized
+  from: RouteLocationNormalized
 }
 
 export function sync(
   store: Store<any>,
-  router: VueRouter,
+  router: Router,
   options?: SyncOptions
 ): () => void {
   const moduleName = (options || {}).moduleName || 'route'
@@ -44,7 +44,7 @@ export function sync(
   // sync router on store change
   const storeUnwatch = store.watch(
     (state) => state[moduleName],
-    (route: Route) => {
+    (route: RouteLocationNormalized) => {
       const { fullPath } = route
       if (fullPath === currentPath) {
         return
@@ -84,7 +84,10 @@ export function sync(
   }
 }
 
-function cloneRoute(to: Route, from?: Route): State {
+function cloneRoute(
+  to: RouteLocationNormalized,
+  from?: RouteLocationNormalized
+): State {
   const clone: State = {
     name: to.name,
     path: to.path,
