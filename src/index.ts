@@ -30,7 +30,7 @@ export function sync(
 
   store.registerModule(moduleName, {
     namespaced: true,
-    state: cloneRoute(router.currentRoute),
+    state: cloneRoute(router.currentRoute.value),
     mutations: {
       ROUTE_CHANGED(_state: State, transition: Transition): void {
         store.state[moduleName] = cloneRoute(transition.to, transition.from)
