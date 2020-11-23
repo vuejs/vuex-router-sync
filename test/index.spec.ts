@@ -1,7 +1,7 @@
-import { createApp, defineComponent, h, nextTick } from 'vue'
+import { createApp, defineComponent, h, computed, nextTick } from 'vue'
 
-import { createStore, mapState } from 'vuex'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createStore, useStore } from 'vuex'
+import { createRouter, createWebHistory, RouterView } from 'vue-router'
 import { sync } from '@/index'
 
 async function run(originalModuleName: string, done: Function): Promise<void> {
@@ -14,19 +14,26 @@ async function run(originalModuleName: string, done: Function): Promise<void> {
   })
 
   const Home = defineComponent({
-    computed: mapState(moduleName, {
-      path: (state: any) => state.fullPath,
-      foo: (state: any) => state.params.foo,
-      bar: (state: any) => state.params.bar
-    }),
-    render() {
-      h('div', [this.path, ' ', this.foo, ' ', this.bar])
+    setup() {
+      const store = useStore()
+      const path = computed(() => store.state[moduleName].fullPath)
+      const foo = computed(() => store.state[moduleName].params.foo)
+      const bar = computed(() => store.state[moduleName].params.bar)
+      return () => h('div', [path.value, ' ', foo.value, ' ', bar.value])
     }
   })
 
   const router = createRouter({
     history: createWebHistory(),
-    routes: [{ path: '/:foo/:bar', component: Home }]
+    routes: [
+      {
+        path: '/',
+        component: {
+          template: 'root'
+        }
+      },
+      { path: '/:foo/:bar', component: Home }
+    ]
   })
 
   sync(store, router, {
@@ -45,13 +52,13 @@ async function run(originalModuleName: string, done: Function): Promise<void> {
   document.body.appendChild(rootEl)
 
   const app = createApp({
-    render: () => h('router-view')
+    render: () => h(RouterView)
   })
   app.use(store)
   app.use(router)
   app.mount(rootEl)
 
-  // expect(app.$el.textContent).toBe('/a/b a b')
+  expect(rootEl.textContent).toBe('/a/b a b')
   await router.push('/c/d?n=1#hello')
   expect((store.state as any)[moduleName].fullPath).toBe('/c/d?n=1#hello')
   expect((store.state as any)[moduleName].params).toEqual({
@@ -62,7 +69,7 @@ async function run(originalModuleName: string, done: Function): Promise<void> {
   expect((store.state as any)[moduleName].hash).toEqual('#hello')
 
   nextTick(() => {
-    // expect(app.$el.textContent).toBe('/c/d?n=1#hello c d')
+    expect(rootEl.textContent).toBe('/c/d?n=1#hello c d')
     done()
   })
 }
