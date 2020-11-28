@@ -82,13 +82,24 @@ test('with custom moduleName', async (done) => {
   await run('moduleName', done)
 })
 
-test('unsync', (done) => {
-  const store = createStore({})
+test('unsync', async (done) => {
+  const store = createStore({
+    state() {
+      return { msg: 'foo' }
+    }
+  })
   spyOn(store, 'watch').and.callThrough()
 
   const router = createRouter({
     history: createWebHistory(),
-    routes: []
+    routes: [
+      {
+        path: '/',
+        component: {
+          template: 'root'
+        }
+      }
+    ]
   })
 
   const moduleName = 'testDesync'
@@ -100,19 +111,14 @@ test('unsync', (done) => {
   // Test module registered, store watched, router hooked
   expect((store as any).state[moduleName]).toBeDefined()
   expect((store as any).watch).toHaveBeenCalled()
-  // expect((store as any)._watcherVM).toBeDefined()
-  // expect((store as any)._watcherVM._watchers).toBeDefined()
-  // expect((store as any)._watcherVM._watchers.length).toBe(1)
-  // expect((router as any).afterEach).toBeDefined()
-  // expect((router as any).afterEach.length).toBe(1)
 
   // Now unsync vuex-router-sync
   unsync()
 
-  // Ensure router unhooked, store-unwatched, module unregistered
-  // expect((router as any).afterEach.length).toBe(0)
-  // expect((store as any)._watcherVm).toBeUndefined()
+  // Ensure module unregistered, no store change
+  router.push('/')
+  await router.isReady()
   expect((store as any).state[moduleName]).toBeUndefined()
-
+  expect((store as any).state).toEqual({ msg: 'foo' })
   done()
 })
