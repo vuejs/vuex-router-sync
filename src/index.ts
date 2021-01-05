@@ -55,7 +55,7 @@ export function sync(
       }
       currentPath = fullPath
     },
-    { sync: true } as any
+    { flush: 'sync' }
   )
 
   // sync store on router navigation
