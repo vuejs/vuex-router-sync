@@ -1,7 +1,7 @@
 import { createApp, defineComponent, h, computed, nextTick } from 'vue'
 
 import { createStore, useStore } from 'vuex'
-import { createRouter, createWebHistory, RouterView } from 'vue-router'
+import { createRouter, createMemoryHistory, RouterView } from 'vue-router'
 import { sync } from '@/index'
 
 async function run(originalModuleName: string, done: Function): Promise<void> {
@@ -24,7 +24,7 @@ async function run(originalModuleName: string, done: Function): Promise<void> {
   })
 
   const router = createRouter({
-    history: createWebHistory(),
+    history: createMemoryHistory(),
     routes: [
       {
         path: '/',
@@ -91,7 +91,7 @@ test('unsync', async (done) => {
   spyOn(store, 'watch').and.callThrough()
 
   const router = createRouter({
-    history: createWebHistory(),
+    history: createMemoryHistory(),
     routes: [
       {
         path: '/',
