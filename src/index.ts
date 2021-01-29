@@ -5,14 +5,8 @@ export interface SyncOptions {
   moduleName: string
 }
 
-export interface State {
-  name?: RouteLocationNormalized['name']
-  path: RouteLocationNormalized['path']
-  hash: RouteLocationNormalized['hash']
-  query: RouteLocationNormalized['query']
-  params: RouteLocationNormalized['params']
-  fullPath: RouteLocationNormalized['fullPath']
-  meta?: RouteLocationNormalized['meta']
+export interface State
+  extends Omit<RouteLocationNormalized, 'matched' | 'redirectedFrom'> {
   from?: Omit<State, 'from'>
 }
 
