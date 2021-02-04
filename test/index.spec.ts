@@ -1,11 +1,10 @@
 import { createApp, defineComponent, h, computed, nextTick } from 'vue'
-
 import { createStore, useStore } from 'vuex'
 import { createRouter, createMemoryHistory, RouterView } from 'vue-router'
 import { sync } from '@/index'
 
 async function run(originalModuleName: string, done: Function): Promise<void> {
-  const moduleName: string = originalModuleName || 'route'
+  const moduleName = originalModuleName || 'route'
 
   const store = createStore({
     state() {
@@ -36,9 +35,9 @@ async function run(originalModuleName: string, done: Function): Promise<void> {
     ]
   })
 
-  sync(store, router, {
-    moduleName: originalModuleName
-  })
+  originalModuleName
+    ? sync(store, router, { moduleName: originalModuleName })
+    : sync(store, router)
 
   router.push('/a/b')
   await router.isReady()
@@ -88,6 +87,7 @@ test('unsync', async (done) => {
       return { msg: 'foo' }
     }
   })
+
   spyOn(store, 'watch').and.callThrough()
 
   const router = createRouter({
@@ -122,3 +122,65 @@ test('unsync', async (done) => {
   expect((store as any).state).toEqual({ msg: 'foo' })
   done()
 })
+
+test('time traveling', async () => {
+  const store = createStore({
+    state() {
+      return { msg: 'foo' }
+    }
+  })
+
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      {
+        path: '/',
+        component: {
+          template: 'root'
+        }
+      },
+      {
+        path: '/a',
+        component: {
+          template: 'a'
+        }
+      }
+    ]
+  })
+
+  sync(store, router)
+
+  const state1 = clone(store.state)
+
+  // time travel before any route change so that we can test `currentPath`
+  // being `undefined`
+  store.replaceState(state1)
+
+  expect((store.state as any).route.path).toBe('/')
+
+  // change route, save new state to time travel later on
+  await router.push('/a')
+
+  expect((store.state as any).route.path).toBe('/a')
+
+  const state2 = clone(store.state)
+
+  // change route again so that we're on different route than `state2`
+  await router.push('/')
+
+  expect((store.state as any).route.path).toBe('/')
+
+  // time travel to check we go back to the old route
+  store.replaceState(state2)
+
+  expect((store.state as any).route.path).toBe('/a')
+
+  // final push to the route to fire `afterEach` hook on router
+  await router.push('/a')
+
+  expect((store.state as any).route.path).toBe('/a')
+})
+
+function clone(state: any) {
+  return JSON.parse(JSON.stringify(state))
+}

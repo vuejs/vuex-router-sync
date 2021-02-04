@@ -45,7 +45,7 @@ export function sync(
       }
       if (currentPath != null) {
         isTimeTraveling = true
-        router.push(route as any)
+        router.push(route)
       }
       currentPath = fullPath
     },
@@ -63,17 +63,13 @@ export function sync(
   })
 
   return function unsync(): void {
-    // On unsync, remove router hook
-    if (afterEachUnHook != null) {
-      afterEachUnHook()
-    }
+    // remove router hook
+    afterEachUnHook()
 
-    // On unsync, remove store watch
-    if (storeUnwatch != null) {
-      storeUnwatch()
-    }
+    // remove store watch
+    storeUnwatch()
 
-    // On unsync, unregister Module with store
+    // unregister Module with store
     store.unregisterModule(moduleName)
   }
 }
