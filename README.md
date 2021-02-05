@@ -7,7 +7,7 @@
 
 ---
 
-:fire: **HEADS UP!** You're currently looking at Vuex Router Synx 6 branch which supports Vue 3. If you're looking for Vuex Router Sync 5 for Vue 2 support, [please check out `dev` branch](https://github.com/vuejs/vuex-router-sync).
+:fire: **HEADS UP!** You're currently looking at Vuex Router Synx 6 branch which supports Vue 3. If you're looking for Vuex Router Sync 5 for Vue 2 support, [please check out `master` branch](https://github.com/vuejs/vuex-router-sync).
 
 ---
 
