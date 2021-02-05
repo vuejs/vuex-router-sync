@@ -1,54 +1,64 @@
-import Vue from 'vue'
-import Vuex, { mapState } from 'vuex'
-import VueRouter from 'vue-router'
+import { createApp, defineComponent, h, computed, nextTick } from 'vue'
+import { createStore, useStore } from 'vuex'
+import { createRouter, createMemoryHistory, RouterView } from 'vue-router'
 import { sync } from '@/index'
 
-Vue.use(Vuex)
-Vue.use(VueRouter)
+async function run(originalModuleName: string, done: Function): Promise<void> {
+  const moduleName = originalModuleName || 'route'
 
-function run(originalModuleName: string, done: Function): void {
-  const moduleName: string = originalModuleName || 'route'
-
-  const store = new Vuex.Store({
-    state: { msg: 'foo' }
-  })
-
-  const Home = Vue.extend({
-    computed: mapState(moduleName, {
-      path: (state: any) => state.fullPath,
-      foo: (state: any) => state.params.foo,
-      bar: (state: any) => state.params.bar
-    }),
-    render(h) {
-      return h('div', [this.path, ' ', this.foo, ' ', this.bar])
+  const store = createStore({
+    state() {
+      return { msg: 'foo' }
     }
   })
 
-  const router = new VueRouter({
-    mode: 'abstract',
-    routes: [{ path: '/:foo/:bar', component: Home }]
+  const Home = defineComponent({
+    setup() {
+      const store = useStore()
+      const path = computed(() => store.state[moduleName].fullPath)
+      const foo = computed(() => store.state[moduleName].params.foo)
+      const bar = computed(() => store.state[moduleName].params.bar)
+      return () => h('div', [path.value, ' ', foo.value, ' ', bar.value])
+    }
   })
 
-  sync(store, router, {
-    moduleName: originalModuleName
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      {
+        path: '/',
+        component: {
+          template: 'root'
+        }
+      },
+      { path: '/:foo/:bar', component: Home }
+    ]
   })
+
+  originalModuleName
+    ? sync(store, router, { moduleName: originalModuleName })
+    : sync(store, router)
 
   router.push('/a/b')
+  await router.isReady()
   expect((store.state as any)[moduleName].fullPath).toBe('/a/b')
   expect((store.state as any)[moduleName].params).toEqual({
     foo: 'a',
     bar: 'b'
   })
 
-  const app = new Vue({
-    store,
-    router,
-    render: (h) => h('router-view')
-  }).$mount()
+  const rootEl = document.createElement('div')
+  document.body.appendChild(rootEl)
 
-  expect(app.$el.textContent).toBe('/a/b a b')
+  const app = createApp({
+    render: () => h(RouterView)
+  })
+  app.use(store)
+  app.use(router)
+  app.mount(rootEl)
 
-  router.push('/c/d?n=1#hello')
+  expect(rootEl.textContent).toBe('/a/b a b')
+  await router.push('/c/d?n=1#hello')
   expect((store.state as any)[moduleName].fullPath).toBe('/c/d?n=1#hello')
   expect((store.state as any)[moduleName].params).toEqual({
     foo: 'c',
@@ -57,25 +67,40 @@ function run(originalModuleName: string, done: Function): void {
   expect((store.state as any)[moduleName].query).toEqual({ n: '1' })
   expect((store.state as any)[moduleName].hash).toEqual('#hello')
 
-  Vue.nextTick(() => {
-    expect(app.$el.textContent).toBe('/c/d?n=1#hello c d')
+  nextTick(() => {
+    expect(rootEl.textContent).toBe('/c/d?n=1#hello c d')
     done()
   })
 }
 
-test('default usage', (done) => {
-  run('', done)
+test('default usage', async (done) => {
+  await run('', done)
 })
 
-test('with custom moduleName', (done) => {
-  run('moduleName', done)
+test('with custom moduleName', async (done) => {
+  await run('moduleName', done)
 })
 
-test('unsync', (done) => {
-  const store = new Vuex.Store({})
+test('unsync', async (done) => {
+  const store = createStore({
+    state() {
+      return { msg: 'foo' }
+    }
+  })
+
   spyOn(store, 'watch').and.callThrough()
 
-  const router = new VueRouter()
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      {
+        path: '/',
+        component: {
+          template: 'root'
+        }
+      }
+    ]
+  })
 
   const moduleName = 'testDesync'
   const unsync = sync(store, router, {
@@ -83,23 +108,79 @@ test('unsync', (done) => {
   })
 
   expect(unsync).toBeInstanceOf(Function)
-
   // Test module registered, store watched, router hooked
   expect((store as any).state[moduleName]).toBeDefined()
   expect((store as any).watch).toHaveBeenCalled()
-  expect((store as any)._watcherVM).toBeDefined()
-  expect((store as any)._watcherVM._watchers).toBeDefined()
-  expect((store as any)._watcherVM._watchers.length).toBe(1)
-  expect((router as any).afterHooks).toBeDefined()
-  expect((router as any).afterHooks.length).toBe(1)
 
   // Now unsync vuex-router-sync
   unsync()
 
-  // Ensure router unhooked, store-unwatched, module unregistered
-  expect((router as any).afterHooks.length).toBe(0)
-  expect((store as any)._watcherVm).toBeUndefined()
+  // Ensure module unregistered, no store change
+  router.push('/')
+  await router.isReady()
   expect((store as any).state[moduleName]).toBeUndefined()
-
+  expect((store as any).state).toEqual({ msg: 'foo' })
   done()
 })
+
+test('time traveling', async () => {
+  const store = createStore({
+    state() {
+      return { msg: 'foo' }
+    }
+  })
+
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      {
+        path: '/',
+        component: {
+          template: 'root'
+        }
+      },
+      {
+        path: '/a',
+        component: {
+          template: 'a'
+        }
+      }
+    ]
+  })
+
+  sync(store, router)
+
+  const state1 = clone(store.state)
+
+  // time travel before any route change so that we can test `currentPath`
+  // being `undefined`
+  store.replaceState(state1)
+
+  expect((store.state as any).route.path).toBe('/')
+
+  // change route, save new state to time travel later on
+  await router.push('/a')
+
+  expect((store.state as any).route.path).toBe('/a')
+
+  const state2 = clone(store.state)
+
+  // change route again so that we're on different route than `state2`
+  await router.push('/')
+
+  expect((store.state as any).route.path).toBe('/')
+
+  // time travel to check we go back to the old route
+  store.replaceState(state2)
+
+  expect((store.state as any).route.path).toBe('/a')
+
+  // final push to the route to fire `afterEach` hook on router
+  await router.push('/a')
+
+  expect((store.state as any).route.path).toBe('/a')
+})
+
+function clone(state: any) {
+  return JSON.parse(JSON.stringify(state))
+}

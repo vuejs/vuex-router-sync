@@ -1,36 +1,30 @@
 import { Store } from 'vuex'
-import VueRouter, { Route } from 'vue-router'
+import { Router, RouteLocationNormalized } from 'vue-router'
 
 export interface SyncOptions {
   moduleName: string
 }
 
-export interface State {
-  name?: string | null
-  path: string
-  hash: string
-  query: Record<string, string | (string | null)[]>
-  params: Record<string, string>
-  fullPath: string
-  meta?: any
+export interface State
+  extends Omit<RouteLocationNormalized, 'matched' | 'redirectedFrom'> {
   from?: Omit<State, 'from'>
 }
 
 export interface Transition {
-  to: Route
-  from: Route
+  to: RouteLocationNormalized
+  from: RouteLocationNormalized
 }
 
 export function sync(
   store: Store<any>,
-  router: VueRouter,
+  router: Router,
   options?: SyncOptions
 ): () => void {
   const moduleName = (options || {}).moduleName || 'route'
 
   store.registerModule(moduleName, {
     namespaced: true,
-    state: cloneRoute(router.currentRoute),
+    state: cloneRoute(router.currentRoute.value),
     mutations: {
       ROUTE_CHANGED(_state: State, transition: Transition): void {
         store.state[moduleName] = cloneRoute(transition.to, transition.from)
@@ -44,18 +38,18 @@ export function sync(
   // sync router on store change
   const storeUnwatch = store.watch(
     (state) => state[moduleName],
-    (route: Route) => {
+    (route: RouteLocationNormalized) => {
       const { fullPath } = route
       if (fullPath === currentPath) {
         return
       }
       if (currentPath != null) {
         isTimeTraveling = true
-        router.push(route as any)
+        router.push(route)
       }
       currentPath = fullPath
     },
-    { sync: true } as any
+    { flush: 'sync' }
   )
 
   // sync store on router navigation
@@ -69,22 +63,21 @@ export function sync(
   })
 
   return function unsync(): void {
-    // On unsync, remove router hook
-    if (afterEachUnHook != null) {
-      afterEachUnHook()
-    }
+    // remove router hook
+    afterEachUnHook()
 
-    // On unsync, remove store watch
-    if (storeUnwatch != null) {
-      storeUnwatch()
-    }
+    // remove store watch
+    storeUnwatch()
 
-    // On unsync, unregister Module with store
+    // unregister Module with store
     store.unregisterModule(moduleName)
   }
 }
 
-function cloneRoute(to: Route, from?: Route): State {
+function cloneRoute(
+  to: RouteLocationNormalized,
+  from?: RouteLocationNormalized
+): State {
   const clone: State = {
     name: to.name,
     path: to.path,
