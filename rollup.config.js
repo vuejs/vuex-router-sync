@@ -57,7 +57,7 @@ function createEntry(config) {
         declaration: config.format === 'es' && config.browser && config.env === 'development',
         target: config.format === 'iife' || config.format === 'cjs' ? 'es5' : 'es2018'
       },
-      exclude: ['test']
+      exclude: ['test', 'playground']
     }
   }))
 

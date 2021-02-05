@@ -12,6 +12,7 @@
     "dist"
   ],
   "scripts": {
+    "dev": "vite serve playground",
     "build": "node scripts/build.js",
     "lint": "prettier --check --write --parser typescript \"{src,test}/**/*.ts\"",
     "lint:fail": "prettier --check --parser typescript \"{src,test}/**/*.ts\"",
@@ -42,6 +43,8 @@
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.1.1",
     "@types/jest": "^26.0.20",
+    "@vitejs/plugin-vue": "^1.1.4",
+    "@vue/compiler-sfc": "^3.0.5",
     "brotli": "^1.3.2",
     "buble": "^0.20.0",
     "chalk": "^4.1.0",
@@ -58,6 +61,7 @@
     "ts-jest": "^26.5.0",
     "tslib": "^2.1.0",
     "typescript": "^4.1.3",
+    "vite": "^2.0.0-beta.64",
     "vue": "^3.0.5",
     "vue-router": "^4.0.2",
     "vuex": "^4.0.0"
