@@ -1,8 +1,8 @@
 # Vuex Router Sync
 
-[![npm](https://img.shields.io/npm/v/vuex-router-sync.svg)](https://npmjs.com/package/vuex-router-sync)
+[![npm](https://img.shields.io/npm/v/vuex-router-sync/next.svg)](https://npmjs.com/package/vuex-router-sync)
 [![ci status](https://github.com/vuejs/vuex-router-sync/workflows/test/badge.svg)](https://github.com/vuejs/vuex-router-sync/actions)
-[![coverage](https://codecov.io/gh/vuejs/vuex-router-sync/branch/master/graph/badge.svg?token=4KJug3I5do)](https://codecov.io/gh/vuejs/vuex-router-sync)
+[![coverage](https://codecov.io/gh/vuejs/vuex-router-sync/branch/6.x/graph/badge.svg?token=4KJug3I5do)](https://codecov.io/gh/vuejs/vuex-router-sync)
 [![license](https://img.shields.io/npm/l/vuex-router-sync.svg?sanitize=true)](http://opensource.org/licenses/MIT)
 
 Sync Vue Router's current `$route` as part of Vuex store's state.
