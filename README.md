@@ -1,8 +1,13 @@
-# vuex-router-sync [![Build Status](https://circleci.com/gh/vuejs/vuex-router-sync.svg?style=shield)](https://circleci.com/gh/vuejs/vuex-router-sync)
+# Vuex Router Sync
+
+[![npm](https://img.shields.io/npm/v/vuex-router-sync.svg)](https://npmjs.com/package/vuex-router-sync)
+[![ci status](https://github.com/vuejs/vuex-router-sync/workflows/test/badge.svg)](https://github.com/vuejs/vuex-router-sync/actions)
+[![coverage](https://codecov.io/gh/vuejs/vuex-router-sync/branch/master/graph/badge.svg?token=4KJug3I5do)](https://codecov.io/gh/vuejs/vuex-router-sync)
+[![license](https://img.shields.io/npm/l/vuex-router-sync.svg?sanitize=true)](http://opensource.org/licenses/MIT)
+
+Sync Vue Router's current `$route` as part of Vuex store's state.
 
 [中文版本 (Chinese Version)](README.zh-cn.md)
-
-> Sync vue-router's current $route as part of vuex store's state.
 
 ## Usage
 

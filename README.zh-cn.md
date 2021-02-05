@@ -1,6 +1,13 @@
-## vuex-router-sync
+# Vuex Router Sync
 
-> 把 vue-router 当前的 `$route` 同步为 vuex 状态的一部分。
+[![npm](https://img.shields.io/npm/v/vuex-router-sync.svg)](https://npmjs.com/package/vuex-router-sync)
+[![ci status](https://github.com/vuejs/vuex-router-sync/workflows/test/badge.svg)](https://github.com/vuejs/vuex-router-sync/actions)
+[![coverage](https://codecov.io/gh/vuejs/vuex-router-sync/branch/master/graph/badge.svg?token=4KJug3I5do)](https://codecov.io/gh/vuejs/vuex-router-sync)
+[![license](https://img.shields.io/npm/l/vuex-router-sync.svg?sanitize=true)](http://opensource.org/licenses/MIT)
+
+把 Vue Router 当前的 `$route` 同步为 Vuex 状态的一部分。
+
+[English](README.md)
 
 ### 用法
 
