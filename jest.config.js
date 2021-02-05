@@ -8,7 +8,7 @@ module.exports = {
   testMatch: ['<rootDir>/test/**/*.spec.ts'],
   testPathIgnorePatterns: ['/node_modules/'],
   coverageDirectory: 'coverage',
-  coverageReporters: ['json', 'lcov', 'text-summary', 'clover'],
+  coverageReporters: ['html', 'json', 'lcov', 'text-summary'],
   collectCoverageFrom: [
     'src/**/*.ts'
   ]
