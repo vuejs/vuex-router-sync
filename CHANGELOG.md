@@ -1,3 +1,9 @@
+# [6.0.0-rc.1](https://github.com/vuejs/vuex-router-sync/compare/v5.0.0...v6.0.0-rc.1) (2021-02-05)
+
+### Features
+
+* make it compatible with vue3 (vuex 4 and router 4) ([#100](https://github.com/vuejs/vuex-router-sync/issues/100)) ([a2a300d](https://github.com/vuejs/vuex-router-sync/commit/a2a300d886c6b85957f54af9cff1ada78ad91ae1))
+
 # [5.0.0](https://github.com/vuejs/vuex-router-sync/compare/v4.1.0...v5.0.0) (2017-10-12)
 
 ### Features

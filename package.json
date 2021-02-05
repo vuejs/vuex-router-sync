@@ -1,6 +1,6 @@
 {
   "name": "vuex-router-sync",
-  "version": "5.0.0",
+  "version": "6.0.0-rc.1",
   "description": "Effortlessly keep vue-router and vuex store in sync.",
   "main": "dist/vuex-router-sync.js",
   "browser": "dist/vuex-router-sync.esm-browser.js",
