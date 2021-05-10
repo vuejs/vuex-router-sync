@@ -48,6 +48,7 @@ sync(store, router, { moduleName: 'RouteModule' } )
   store.state.route.path   // current path (string)
   store.state.route.params // current params (object)
   store.state.route.query  // current query (object)
+  store.state.route.name  // current name from route (string)
   ```
 
 - When the router navigates to a new route, the store's state is updated.
