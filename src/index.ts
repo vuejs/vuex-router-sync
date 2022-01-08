@@ -53,11 +53,16 @@ export function sync(
   )
 
   // sync store on router navigation
-  const afterEachUnHook = router.afterEach((to, from) => {
+  const afterEachUnHook = router.afterEach((to, from, failure) => {
     if (isTimeTraveling) {
       isTimeTraveling = false
       return
     }
+
+    if (failure) {
+        return;
+    }
+
     currentPath = to.fullPath
     store.commit(moduleName + '/ROUTE_CHANGED', { to, from })
   })
