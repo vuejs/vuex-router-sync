@@ -3,6 +3,7 @@ import { Router, RouteLocationNormalized } from 'vue-router'
 
 export interface SyncOptions {
   moduleName: string
+  isWatchState?: boolean
 }
 
 export interface State
@@ -20,7 +21,10 @@ export function sync(
   router: Router,
   options?: SyncOptions
 ): () => void {
-  const moduleName = (options || {}).moduleName || 'route'
+  const {moduleName, isWatchState} = {
+      moduleName: 'route',
+    isWatchState: true
+  , ...options}
 
   store.registerModule(moduleName, {
     namespaced: true,
@@ -36,7 +40,7 @@ export function sync(
   let currentPath: string
 
   // sync router on store change
-  const storeUnwatch = store.watch(
+  const storeUnwatch = isWatchState && store.watch(
     (state) => state[moduleName],
     (route: RouteLocationNormalized) => {
       const { fullPath } = route
@@ -67,7 +71,9 @@ export function sync(
     afterEachUnHook()
 
     // remove store watch
-    storeUnwatch()
+    if (storeUnwatch) {
+      storeUnwatch()
+    }
 
     // unregister Module with store
     store.unregisterModule(moduleName)
